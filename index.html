@@ -3,27 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Visor del levantamiento de cimentaciones de 11 edificaciones de San Gil, Santander.">
-  <meta name="theme-color" content="#152c2a">
-  <title>Cimentaciones de San Gil · Visor técnico</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Instrument+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Mapa y fichas de cimentación de edificaciones destacadas de San Gil, Santander.">
+  <meta name="theme-color" content="#ffffff">
+  <title>Edificaciones destacadas de San Gil y su cimentación</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
-  <link rel="stylesheet" href="./estilos.css?v=5">
+  <link rel="stylesheet" href="./estilos.css?v=6">
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
-  <script type="module" src="./visor.js?v=4"></script>
+  <script type="module" src="./visor.js?v=5"></script>
 </head>
 <body>
   <a class="skip" href="#mapa-inventario">Ir al visor</a>
   <header class="top">
     <div class="wrap top-inner">
       <a class="brand" href="./" aria-label="Inicio del visor de San Gil">
-        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span><strong>San Gil</strong><small>Santander, Colombia</small></span>
+        <img class="brand-logo" src="./assets/alcaldia-san-gil.png" alt="Alcaldía de San Gil" width="497" height="724" decoding="async">
+        <span><strong>Visor de cimentaciones</strong><small>San Gil, Santander</small></span>
       </a>
       <nav aria-label="Navegación principal">
         <a href="#mapa-inventario">Visor</a>
+        <a href="#estadisticas">Estadísticas</a>
         <a href="#fuentes">Fuentes</a>
         <a class="top-link" href="https://www.colombiaenmapas.gov.co/?b=igac&amp;u=0&amp;module=catastral" target="_blank" rel="noopener">Geoportal IGAC <span aria-hidden="true">↗</span></a>
       </nav>
@@ -34,16 +32,12 @@
     <section class="intro wrap" aria-labelledby="titulo">
       <div class="intro-text">
         <p class="eyebrow">Inventario técnico municipal</p>
-        <h1 id="titulo">Cimentaciones<br class="title-break"> de San Gil<span>.</span></h1>
-        <p class="intro-description">Ubicación y revisión documental de la cimentación de 11 edificaciones de mayor altura en el municipio.</p>
-      </div>
-      <div>
-        <dl class="metrics" aria-label="Resumen del inventario">
-          <div><dt>Meta del inventario</dt><dd>11</dd></div>
-          <div><dt>Ubicadas en mapa</dt><dd id="total-ubicadas">—</dd></div>
-          <div><dt>Profundidad media de desplante</dt><dd id="promedio-desplante">—</dd></div>
-        </dl>
-        <p id="nota-desplante" class="metric-note">Se calcula con medidas desde el terreno hasta la base de la cimentación.</p>
+        <h1 id="titulo">Edificaciones destacadas de San Gil y su cimentación</h1>
+        <p class="intro-description">Explora dónde están las edificaciones del inventario, qué sistemas de cimentación utilizan y qué niveles indican sus planos.</p>
+        <div class="intro-actions">
+          <a class="primary-link" href="#mapa-inventario">Explorar el mapa <span aria-hidden="true">↓</span></a>
+          <a class="download-link" href="./informe-cimentaciones-san-gil.docx" download>Descargar informe en Word <span aria-hidden="true">↓</span></a>
+        </div>
       </div>
     </section>
 
@@ -99,6 +93,26 @@
         </aside>
       </div>
       <noscript><p>Activa JavaScript para consultar el mapa interactivo y las fichas.</p></noscript>
+    </section>
+
+    <section id="estadisticas" class="statistics wrap" aria-labelledby="titulo-estadisticas">
+      <header class="statistics-header">
+        <p class="eyebrow">Lectura del inventario</p>
+        <h2 id="titulo-estadisticas">Estadísticas de cimentación</h2>
+        <p id="resumen-inventario" class="muted">Cargando el resumen…</p>
+      </header>
+      <div class="statistics-grid">
+        <div class="stats-panel">
+          <h3>Edificaciones por tipo</h3>
+          <ul id="resumen-tipos" class="type-stats" aria-label="Conteo por tipo de cimentación"></ul>
+          <p class="stats-note">Una ficha puede contar en más de un tipo si el proyecto combina sistemas.</p>
+        </div>
+        <div class="stats-panel">
+          <h3>Niveles de cimentación en planos</h3>
+          <dl id="resumen-cotas" class="level-stats"></dl>
+          <p id="nota-desplante" class="stats-note">Cada cota usa la referencia de su propio proyecto.</p>
+        </div>
+      </div>
     </section>
 
     <section id="fuentes" class="sources wrap" aria-labelledby="titulo-fuentes">

@@ -1,4 +1,4 @@
-import { leerInventario, META, normalizar, resumenDesplante, TIPOS } from "./datos.js?v=3";
+import { leerInventario, normalizar, resumenDesplante, TIPOS } from "./datos.js?v=4";
 import { iniciarCatastro } from "./catastro.js?v=2";
 
 const centro = [6.55, -73.133333];
@@ -44,15 +44,34 @@ function colorDeFicha({ categorias }) {
 }
 
 function mostrarResumen() {
-  const ubicadas = edificios.filter(({ coordenadas }) => coordenadas).length;
+  const total = edificios.length;
+  const conTipo = edificios.filter(({ categorias }) => categorias.length).length;
+  const conCota = edificios.filter(({ cotaProyecto }) => cotaProyecto);
   const { cantidad, promedio } = resumenDesplante(edificios);
-  porId("total-ubicadas").textContent = String(ubicadas);
-  const cifra = porId("promedio-desplante");
-  cifra.textContent = promedio === null ? "—" : `${formatoNumero.format(promedio)} m`;
-  const nota = porId("nota-desplante");
-  nota.textContent = cantidad < 2
-    ? `${cantidad} de ${edificios.length} fichas con profundidad comparable. Las cotas de plano se consultan en cada ficha.`
-    : `Promedio de ${cantidad} de ${edificios.length} fichas con medida desde el terreno hasta la base de la cimentación.`;
+  porId("resumen-inventario").textContent = `${total} fichas en el inventario · ${conTipo} con tipo de cimentación identificado · ${conCota.length} con cotas en planos`;
+
+  const filas = Object.entries(TIPOS).map(([tipo, etiqueta]) => {
+    const n = edificios.filter(({ categorias }) => categorias.includes(tipo)).length;
+    const fila = crear("li", "", tipo);
+    const detalle = crear("div", "", "stat-label");
+    detalle.append(crear("span", etiqueta), crear("strong", `${n} de ${total}`));
+    const barra = crear("div", "", "stat-track");
+    barra.setAttribute("aria-hidden", "true");
+    const relleno = crear("span");
+    relleno.style.width = `${total ? n / total * 100 : 0}%`;
+    barra.append(relleno);
+    fila.append(detalle, barra);
+    return fila;
+  });
+  porId("resumen-tipos").replaceChildren(...filas);
+  porId("resumen-cotas").replaceChildren(...conCota.map(({ nombre, cotaProyecto }) => {
+    const fila = crear("div");
+    fila.append(crear("dt", nombre), crear("dd", cotaProyecto));
+    return fila;
+  }));
+  porId("nota-desplante").textContent = promedio === null
+    ? "Las cotas tienen referencias distintas. El inventario no reúne suficientes profundidades de desplante medidas desde el terreno para calcular un promedio."
+    : `Profundidad media de desplante: ${formatoNumero.format(promedio)} m, con ${cantidad} medidas desde el terreno hasta la base de la cimentación. Las cotas de plano se muestran aparte.`;
 }
 
 function estadoDeMapa(mensaje) {
@@ -193,7 +212,7 @@ function actualizarListado() {
     ficha.hidden = true;
   }
   conteo.textContent = edificios.length === visibles.length
-    ? `${edificios.length} de ${META} fichas registradas`
+    ? `${edificios.length} fichas registradas`
     : `${visibles.length} de ${edificios.length} fichas registradas`;
   listado.replaceChildren();
 
@@ -238,5 +257,6 @@ try {
 } catch (error) {
   console.error("No se pudo cargar el inventario.", error);
   conteo.textContent = "Inventario temporalmente no disponible";
+  porId("resumen-inventario").textContent = "Estadísticas temporalmente no disponibles";
   mostrarMensaje("Error al cargar las fichas", "Vuelve a cargar la página. El mapa base y los enlaces de consulta siguen disponibles.");
 }

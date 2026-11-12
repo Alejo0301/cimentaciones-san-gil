@@ -1,16 +1,18 @@
 # Cimentaciones de San Gil
 
-Visor del levantamiento de 11 edificaciones de mayor altura en San Gil, Santander. La página muestra el avance, la ubicación y las fichas de revisión documental. Las capas de construcciones, predios y nomenclatura vial consultan la Base Catastral Pública del IGAC para la vista del mapa. La base visual es OpenStreetMap y el botón **Geoportal IGAC** abre el módulo catastral de Colombia en Mapas.
+Visor de ubicación y cimentación de edificaciones destacadas de San Gil, Santander. La página muestra las fichas disponibles, las estadísticas del inventario y el informe descargable en Word. Las capas de construcciones, predios y nomenclatura vial consultan la Base Catastral Pública del IGAC. La base visual es OpenStreetMap y el botón **Geoportal IGAC** abre el módulo catastral de Colombia en Mapas.
 
 ## Actualizar el inventario
 
-Edita `data/edificaciones.csv`. El archivo usa UTF-8 y punto y coma. Conserva la primera fila y los identificadores `E01` a `E11`. Una fila con nombre aparece en el listado y aparece en el mapa al agregar latitud y longitud confirmadas en grados decimales WGS 84. Puedes usar punto o coma decimal. Si un campo contiene punto y coma, ponlo entre comillas dobles.
+Edita `data/edificaciones.csv`. El archivo usa UTF-8 y punto y coma. Conserva la primera fila y los identificadores existentes. Una fila con nombre aparece en el listado y aparece en el mapa al agregar latitud y longitud en grados decimales WGS 84. Puedes usar punto o coma decimal. Si un campo contiene punto y coma, ponlo entre comillas dobles.
 
 Registra pisos y altura en sus columnas respectivas cuando estén documentados. Describe el sistema en `tipo_cimentacion` y escribe su referencia en `fuente`. En `grupos_cimentacion` usa `zapatas`, `zapatas-con-vigas` o `losa`. Si hay varios sistemas, sepáralos con `|` y escribe primero el principal. Si falta el tipo o no se puede atribuir a esa edificación, deja los grupos vacíos y aclara el alcance en `observaciones`. La ficha seguirá apareciendo al ver todos los edificios.
 
 Usa `profundidad_desplante_m` solo para una medida representativa por ficha, en metros desde el terreno hasta la base de la cimentación, con una referencia de terreno comparable y su fuente identificada. El visor calcula el promedio cuando hay al menos dos medidas. Guarda los niveles relativos en `cota_proyecto` con su referencia y los espesores de elementos en `observaciones`.
 
 En `observaciones` puedes registrar las dimensiones aportadas, precisar si el dato describe el diseño o la obra ejecutada y señalar qué torre o zona cubre el documento.
+
+Al actualizar el informe, conserva el nombre `informe-cimentaciones-san-gil.docx` en la raíz del sitio y vuelve a revisar sus cifras con el inventario.
 
 GitHub Pages publica el CSV junto con el sitio. Mantén los expedientes, firmas y datos personales en el archivo interno de la Secretaría. Usa enlaces HTTPS públicos en `enlace_fuente` y, cuando haya una ficha cartográfica de la edificación, en `enlace_ubicacion`.
 

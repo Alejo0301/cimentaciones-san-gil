@@ -10,8 +10,6 @@ export const TIPOS = Object.freeze({
   losa: "Losa de cimentación",
 });
 
-export const META = 11;
-
 export function normalizar(texto) {
   return texto.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
 }
@@ -71,7 +69,7 @@ export function leerInventario(csv) {
 
   return filas.flatMap((fila) => {
     const [id, nombre, direccion, latitud, longitud, pisos, altura, tipo, grupos, fuente, enlace, observaciones, enlaceUbicacion, profundidad, cotaProyecto] = fila;
-    if (fila.length !== columnas.length || !/^E(?:0[1-9]|1[01])$/.test(id) || ids.has(id)) {
+    if (fila.length !== columnas.length || !/^E(?:0[1-9]|[1-9][0-9])$/.test(id) || ids.has(id)) {
       throw new Error(`Fila inválida o repetida en el inventario (${id || "sin identificador"}).`);
     }
     ids.add(id);
