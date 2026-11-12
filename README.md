@@ -6,11 +6,9 @@ Visor del levantamiento de 11 edificaciones de mayor altura en San Gil, Santande
 
 Edita `data/edificaciones.csv`. El archivo usa UTF-8 y punto y coma. Conserva la primera fila y los identificadores `E01` a `E11`. Una fila con nombre aparece en el listado y aparece en el mapa al agregar latitud y longitud confirmadas en grados decimales WGS 84. Puedes usar punto o coma decimal. Si un campo contiene punto y coma, ponlo entre comillas dobles.
 
-Registra pisos y altura en sus columnas respectivas cuando estén documentados. El visor muestra el tipo de cimentación cuando están completos `tipo_cimentacion` y `fuente` y el estado es `Verificado` o `Reportada`.
+Registra pisos y altura en sus columnas respectivas cuando estén documentados. Describe el sistema en `tipo_cimentacion` y escribe su referencia en `fuente`. En `grupos_cimentacion` usa `zapatas`, `zapatas-con-vigas` o `losa`. Si hay varios sistemas, sepáralos con `|` y escribe primero el principal. Si falta el tipo o no se puede atribuir a esa edificación, deja los grupos vacíos y aclara el alcance en `observaciones`. La ficha seguirá apareciendo al ver todos los edificios.
 
-- Usa `Verificado` cuando el documento revisado identifique la cimentación de esa edificación. Escribe una referencia publicable en `fuente`.
-- Usa `Reportada` para información técnica aportada al inventario que esté pendiente de revisión documental. Indica el origen de la información en `fuente`.
-- Usa `Por verificar` cuando falte información sobre la cimentación o haya discrepancias por resolver.
+Usa `profundidad_desplante_m` solo para una medida representativa por ficha, en metros desde el terreno hasta la base de la cimentación, con una referencia de terreno comparable y su fuente identificada. El visor calcula el promedio cuando hay al menos dos medidas. Guarda los niveles relativos en `cota_proyecto` con su referencia y los espesores de elementos en `observaciones`.
 
 En `observaciones` puedes registrar las dimensiones aportadas, precisar si el dato describe el diseño o la obra ejecutada y señalar qué torre o zona cubre el documento.
 

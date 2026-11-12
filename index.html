@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Instrument+Sans:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
-  <link rel="stylesheet" href="./estilos.css?v=4">
+  <link rel="stylesheet" href="./estilos.css?v=5">
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
-  <script type="module" src="./visor.js?v=3"></script>
+  <script type="module" src="./visor.js?v=4"></script>
 </head>
 <body>
   <a class="skip" href="#mapa-inventario">Ir al visor</a>
@@ -37,11 +37,14 @@
         <h1 id="titulo">Cimentaciones<br class="title-break"> de San Gil<span>.</span></h1>
         <p class="intro-description">Ubicación y revisión documental de la cimentación de 11 edificaciones de mayor altura en el municipio.</p>
       </div>
-      <dl class="metrics" aria-label="Avance del levantamiento">
-        <div><dt>Meta del inventario</dt><dd>11</dd></div>
-        <div><dt>Ubicadas en mapa</dt><dd id="total-ubicadas">—</dd></div>
-        <div><dt>Cimentaciones verificadas</dt><dd id="total-verificadas">—</dd></div>
-      </dl>
+      <div>
+        <dl class="metrics" aria-label="Resumen del inventario">
+          <div><dt>Meta del inventario</dt><dd>11</dd></div>
+          <div><dt>Ubicadas en mapa</dt><dd id="total-ubicadas">—</dd></div>
+          <div><dt>Profundidad media de desplante</dt><dd id="promedio-desplante">—</dd></div>
+        </dl>
+        <p id="nota-desplante" class="metric-note">Se calcula con medidas desde el terreno hasta la base de la cimentación.</p>
+      </div>
     </section>
 
     <section class="explorer wrap" id="mapa-inventario" aria-labelledby="titulo-mapa">
@@ -68,28 +71,24 @@
             <p id="estado-mapa" class="map-notice" role="status" hidden></p>
             <a id="mapa-alterno" class="map-alternate" href="https://www.openstreetmap.org/#map=15/6.5500/-73.1333" target="_blank" rel="noopener" hidden>Abrir mapa de San Gil ↗</a>
           </div>
-          <div class="legend" aria-label="Convenciones del mapa">
-            <span><i class="dot verificada"></i> Cimentación verificada</span>
-            <span><i class="dot reportada"></i> Cimentación reportada</span>
-            <span><i class="dot pendiente"></i> Sin tipo registrado</span>
+          <div class="legend" role="group" aria-label="Tipos de cimentación en el mapa">
+            <div id="leyenda-tipos" class="legend-items"></div>
+            <p>Al ver todos los edificios, el color indica el tipo principal. El filtro también encuentra sistemas secundarios.</p>
           </div>
         </div>
 
         <aside class="inventory" aria-labelledby="titulo-inventario">
           <div class="inventory-head">
-            <p id="etapa" class="stage"><i class="dot pendiente"></i> Levantamiento en curso</p>
+            <p class="eyebrow inventory-kicker">Inventario de cimentaciones</p>
             <h2 id="titulo-inventario">Edificaciones</h2>
             <p id="conteo-fichas" class="muted" aria-live="polite">Cargando el inventario…</p>
           </div>
           <div id="controles" class="controls" hidden>
             <label for="buscar">Buscar por nombre, dirección o cimentación</label>
             <input id="buscar" type="search" placeholder="Buscar una edificación">
-            <label for="filtro">Estado de la cimentación</label>
+            <label for="filtro">Tipo de cimentación</label>
             <select id="filtro">
-              <option value="todas">Todos los estados</option>
-              <option value="verificada">Verificada</option>
-              <option value="reportada">Reportada</option>
-              <option value="pendiente">Sin tipo registrado</option>
+              <option value="todas">Todos los edificios</option>
             </select>
           </div>
           <div id="listado" class="listing"></div>
@@ -104,7 +103,7 @@
 
     <section id="fuentes" class="sources wrap" aria-labelledby="titulo-fuentes">
       <div>
-        <p class="eyebrow">Consulta y verificación</p>
+        <p class="eyebrow">Cartografía y expedientes</p>
         <h2 id="titulo-fuentes">Fuentes del visor</h2>
         <p>Las capas del mapa provienen de la Base Catastral Pública del IGAC. Las fichas del inventario identifican el origen de los datos de cimentación.</p>
       </div>

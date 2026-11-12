@@ -1,4 +1,4 @@
-import { leerInventario, META, normalizar } from "./datos.js?v=2";
+import { leerInventario, META, normalizar, resumenDesplante, TIPOS } from "./datos.js?v=3";
 import { iniciarCatastro } from "./catastro.js?v=2";
 
 const centro = [6.55, -73.133333];
@@ -12,11 +12,6 @@ const encuadrar = porId("encuadrar");
 const avisoMapa = porId("estado-mapa");
 const mapaAlterno = porId("mapa-alterno");
 const formatoNumero = new Intl.NumberFormat("es-CO", { maximumFractionDigits: 2 });
-const textoEstado = {
-  verificada: "Cimentación verificada",
-  reportada: "Cimentación reportada",
-  pendiente: "Cimentación por verificar",
-};
 const L = window.L;
 let mapa;
 let capaMarcadores;
@@ -30,6 +25,34 @@ function crear(etiqueta, texto, clase) {
   if (texto) nodo.textContent = texto;
   if (clase) nodo.className = clase;
   return nodo;
+}
+
+function iniciarTipos() {
+  const leyenda = porId("leyenda-tipos");
+  for (const [clave, etiqueta] of Object.entries(TIPOS)) {
+    const opcion = crear("option", etiqueta);
+    opcion.value = clave;
+    filtro.append(opcion);
+    const item = crear("span");
+    item.append(crear("i", "", `dot ${clave}`), etiqueta);
+    leyenda.append(item);
+  }
+}
+
+function colorDeFicha({ categorias }) {
+  return filtro.value === "todas" ? categorias[0] ?? "" : filtro.value;
+}
+
+function mostrarResumen() {
+  const ubicadas = edificios.filter(({ coordenadas }) => coordenadas).length;
+  const { cantidad, promedio } = resumenDesplante(edificios);
+  porId("total-ubicadas").textContent = String(ubicadas);
+  const cifra = porId("promedio-desplante");
+  cifra.textContent = promedio === null ? "—" : `${formatoNumero.format(promedio)} m`;
+  const nota = porId("nota-desplante");
+  nota.textContent = cantidad < 2
+    ? `${cantidad} de ${edificios.length} fichas con profundidad comparable. Las cotas de plano se consultan en cada ficha.`
+    : `Promedio de ${cantidad} de ${edificios.length} fichas con medida desde el terreno hasta la base de la cimentación.`;
 }
 
 function estadoDeMapa(mensaje) {
@@ -83,9 +106,9 @@ function dibujarMarcadores() {
   marcadores.clear();
   for (const edificio of visibles) {
     if (!edificio.coordenadas) continue;
-    const { id, nombre, coordenadas, estadoCimentacion } = edificio;
+    const { id, nombre, coordenadas } = edificio;
     const icono = L.divIcon({
-      className: `map-pin ${estadoCimentacion}`,
+      className: `map-pin ${colorDeFicha(edificio)}`,
       html: crear("span", id.slice(1)),
       iconSize: [31, 31],
       iconAnchor: [15, 15],
@@ -109,10 +132,15 @@ function actualizarSeleccion() {
 }
 
 function mostrarFicha(edificio, acercar, moverFoco = true) {
-  const { id, nombre, direccion, coordenadas, estadoCimentacion, tipo, pisos, altura, fuente, enlace, observaciones, enlaceUbicacion } = edificio;
+  const { id, nombre, direccion, coordenadas, categorias, tipo, pisos, altura, fuente, enlace, observaciones, enlaceUbicacion, profundidadDesplante, cotaProyecto } = edificio;
   seleccionado = id;
-  const estado = crear("p", "", "chip");
-  estado.append(crear("i", "", `dot ${estadoCimentacion}`), textoEstado[estadoCimentacion]);
+  const tipos = categorias.map((categoria) => {
+    const chip = crear("span", "", "chip");
+    chip.append(crear("i", "", `dot ${categoria}`), TIPOS[categoria]);
+    return chip;
+  });
+  const etiquetas = crear("div", "", "type-chips");
+  etiquetas.append(...tipos);
   const datos = crear("dl");
   const campos = [
     ["Dirección", direccion],
@@ -120,6 +148,8 @@ function mostrarFicha(edificio, acercar, moverFoco = true) {
     ["Pisos", pisos],
     ["Altura", altura ? `${formatoNumero.format(altura)} m` : ""],
     ["Tipo de cimentación", tipo],
+    ["Profundidad de desplante", profundidadDesplante === null ? "" : `${formatoNumero.format(profundidadDesplante)} m desde el terreno`],
+    ["Cota de proyecto", cotaProyecto],
     ["Fuentes de la ficha", fuente],
     ["Observaciones", observaciones],
   ];
@@ -129,7 +159,7 @@ function mostrarFicha(edificio, acercar, moverFoco = true) {
     fila.append(crear("dt", etiqueta), crear("dd", String(valor)));
     datos.append(fila);
   }
-  ficha.replaceChildren(crear("h3", `${id} · ${nombre}`), estado, datos);
+  ficha.replaceChildren(crear("h3", `${id} · ${nombre}`), ...(tipos.length ? [etiquetas] : []), datos);
   const enlaces = crear("div", "", "detail-links");
   for (const [url, etiqueta] of [[enlace, "Consultar documento ↗"], [enlaceUbicacion, "Consultar ubicación ↗"]]) {
     if (!url) continue;
@@ -154,9 +184,9 @@ function mostrarMensaje(titulo, descripcion) {
 
 function actualizarListado() {
   const consulta = normalizar(buscar.value);
-  visibles = edificios.filter(({ id, nombre, direccion, tipo, observaciones, estadoCimentacion }) => {
-    const coincide = normalizar(`${id} ${nombre} ${direccion} ${tipo} ${observaciones}`).includes(consulta);
-    return coincide && (filtro.value === "todas" || filtro.value === estadoCimentacion);
+  visibles = edificios.filter(({ id, nombre, direccion, tipo, observaciones, categorias }) => {
+    const coincide = normalizar(`${id} ${nombre} ${direccion} ${tipo} ${categorias.map((categoria) => TIPOS[categoria]).join(" ")} ${observaciones}`).includes(consulta);
+    return coincide && (filtro.value === "todas" || categorias.includes(filtro.value));
   });
   if (!visibles.some(({ id }) => id === seleccionado)) {
     seleccionado = null;
@@ -168,13 +198,14 @@ function actualizarListado() {
   listado.replaceChildren();
 
   for (const edificio of visibles) {
-    const { id, nombre, tipo, estadoCimentacion } = edificio;
+    const { id, nombre, tipo } = edificio;
     const boton = crear("button", "", "building");
     boton.type = "button";
     boton.dataset.id = id;
     const texto = crear("span");
-    texto.append(crear("span", nombre, "building-name"), crear("span", tipo || textoEstado[estadoCimentacion], "building-type"));
-    boton.append(crear("span", id, `badge ${estadoCimentacion}`), texto);
+    texto.append(crear("span", nombre, "building-name"));
+    if (tipo) texto.append(crear("span", tipo, "building-type"));
+    boton.append(crear("span", id, `badge ${colorDeFicha(edificio)}`), texto);
     boton.addEventListener("click", () => mostrarFicha(edificio, true));
     listado.append(boton);
   }
@@ -182,29 +213,25 @@ function actualizarListado() {
   if (!edificios.length) {
     mostrarMensaje("Inventario en preparación", "Las fichas se incorporarán a medida que avance la revisión de los expedientes.");
   } else if (!visibles.length) {
-    mostrarMensaje("Sin coincidencias", "Prueba con otro término o cambia el filtro de estado.");
+    mostrarMensaje("Sin coincidencias", "Prueba con otro término o tipo de cimentación.");
   }
   dibujarMarcadores();
   actualizarSeleccion();
 }
 
 iniciarMapa();
+iniciarTipos();
 try {
-  const respuesta = await fetch(new URL("./data/edificaciones.csv", import.meta.url), { cache: "no-cache" });
+  const respuesta = await fetch(new URL("./data/edificaciones.csv?v=2", import.meta.url), { cache: "no-cache" });
   if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
   edificios = leerInventario(await respuesta.text());
-  const ubicadas = edificios.filter(({ coordenadas }) => coordenadas).length;
-  const verificadas = edificios.filter(({ verificada }) => verificada).length;
-  porId("total-ubicadas").textContent = String(ubicadas);
-  porId("total-verificadas").textContent = String(verificadas);
-  if (ubicadas === META && verificadas === META) {
-    const etapa = porId("etapa");
-    etapa.classList.add("complete");
-    etapa.replaceChildren(crear("i", "", "dot verificada"), "Levantamiento completo");
-  }
+  mostrarResumen();
   porId("controles").hidden = !edificios.length;
   buscar.addEventListener("input", actualizarListado);
-  filtro.addEventListener("change", actualizarListado);
+  filtro.addEventListener("change", () => {
+    actualizarListado();
+    ajustarMapa();
+  });
   actualizarListado();
   ajustarMapa();
   if (edificios.length === 1) mostrarFicha(edificios[0], false, false);

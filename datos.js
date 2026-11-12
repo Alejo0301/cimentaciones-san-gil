@@ -1,13 +1,14 @@
 const columnas = [
   "id", "nombre", "direccion", "latitud", "longitud", "pisos", "altura_m",
-  "tipo_cimentacion", "estado_cimentacion", "fuente", "enlace_fuente", "observaciones", "enlace_ubicacion",
+  "tipo_cimentacion", "grupos_cimentacion", "fuente", "enlace_fuente", "observaciones", "enlace_ubicacion",
+  "profundidad_desplante_m", "cota_proyecto",
 ];
-const estadosConTipo = new Map([
-  ["verificada", "verificada"],
-  ["verificado", "verificada"],
-  ["reportada", "reportada"],
-  ["reportado", "reportada"],
-]);
+
+export const TIPOS = Object.freeze({
+  zapatas: "Zapatas",
+  "zapatas-con-vigas": "Zapatas con vigas",
+  losa: "Losa de cimentación",
+});
 
 export const META = 11;
 
@@ -69,7 +70,7 @@ export function leerInventario(csv) {
   const ids = new Set();
 
   return filas.flatMap((fila) => {
-    const [id, nombre, direccion, latitud, longitud, pisos, altura, tipo, estado, fuente, enlace, observaciones, enlaceUbicacion] = fila;
+    const [id, nombre, direccion, latitud, longitud, pisos, altura, tipo, grupos, fuente, enlace, observaciones, enlaceUbicacion, profundidad, cotaProyecto] = fila;
     if (fila.length !== columnas.length || !/^E(?:0[1-9]|1[01])$/.test(id) || ids.has(id)) {
       throw new Error(`Fila inválida o repetida en el inventario (${id || "sin identificador"}).`);
     }
@@ -83,18 +84,27 @@ export function leerInventario(csv) {
       : null;
     const nivel = decimal(pisos);
     const metros = decimal(altura);
-    const estadoCimentacion = tipo && fuente
-      ? estadosConTipo.get(normalizar(estado)) ?? "pendiente"
-      : "pendiente";
+    const categorias = grupos ? [...new Set(grupos.split("|").map((grupo) => grupo.trim()))] : [];
+    if (categorias.some((categoria) => !Object.hasOwn(TIPOS, categoria))) {
+      throw new Error(`Tipo de cimentación desconocido en ${id}.`);
+    }
+    const desplante = decimal(profundidad);
 
     return [{
-      id, nombre, direccion, coordenadas, fuente, observaciones, estadoCimentacion,
-      verificada: estadoCimentacion === "verificada",
+      id, nombre, direccion, coordenadas, fuente, observaciones, tipo, categorias, cotaProyecto,
       pisos: Number.isInteger(nivel) && nivel > 0 ? nivel : null,
       altura: metros > 0 ? metros : null,
-      tipo: estadoCimentacion === "pendiente" ? "" : tipo,
+      profundidadDesplante: desplante > 0 ? desplante : null,
       enlace: enlaceSeguro(enlace),
       enlaceUbicacion: enlaceSeguro(enlaceUbicacion),
     }];
   });
+}
+
+export function resumenDesplante(edificios) {
+  const medidas = edificios.flatMap(({ profundidadDesplante }) => profundidadDesplante === null ? [] : [profundidadDesplante]);
+  return {
+    cantidad: medidas.length,
+    promedio: medidas.length >= 2 ? medidas.reduce((total, medida) => total + medida, 0) / medidas.length : null,
+  };
 }
