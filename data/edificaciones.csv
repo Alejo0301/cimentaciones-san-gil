@@ -1,5 +1,7 @@
 ﻿id;nombre;direccion;latitud;longitud;pisos;altura_m;tipo_cimentacion;grupos_cimentacion;fuente;enlace_fuente;observaciones;enlace_ubicacion;profundidad_desplante_m;cota_proyecto
-E01;Edificio Terrazas del Río;Carrera 12 n.º 8-09/19, barrio La Playa;6.550388;-73.131226;15;;;;Base Catastral Pública del IGAC.;;También conocido como Miradores del Río. El punto señala la huella del edificio.;https://www.waze.com/es/live-map/directions/co/santander/san-gil/edificio-terrazas-del-rio?to=place.ChIJ_37dESnHaY4R3r2TOEkesdY;;
+E01;Edificio Terrazas del Río;Carrera 12 n.º 8-09/19, barrio La Playa;6.550388;-73.131226;15;;Zapatas con vigas de cimentación;zapatas-con-vigas;Planta de distribución de zapatas, planta de cimentación y detalles de los muros M-1 y M-2.;;"Zapatas de distintas dimensiones en planta, entre ellas de 2,50 × 2,50 m, conectadas por vigas de cimentación. El plano indica vigas de 40 × 50 cm.
+
+También conocido como Miradores del Río. El punto señala la huella del edificio.";https://www.waze.com/es/live-map/directions/co/santander/san-gil/edificio-terrazas-del-rio?to=place.ChIJ_37dESnHaY4R3r2TOEkesdY;;−2,90 m (nivel indicado junto a las vigas de cimiento de los muros M-1 y M-2)
 E02;Edificio Balcones del Fonce;Carrera 9 n.º 8-53, barrio María Auxiliadora;6.553010;-73.130065;8;;Zapatas amarradas con vigas y zapatas combinadas;zapatas-con-vigas;Levantamiento técnico.;;"Las zapatas tienen lados de 1,50 a 3,80 m y un espesor promedio de 0,60 m.
 
 El punto representa el predio.";https://www.openstreetmap.org/?mlat=6.553010&mlon=-73.130065#map=19/6.553010/-73.130065;;
@@ -21,6 +23,4 @@ El plano indica suelo tipo D y capacidad portante de 26,0 t/m². El punto repres
 E08;Torre San Gil Plaza;Carrera 17 n.º 34-44, sector La Feria;6.553995;-73.152250;13;;Zapatas con vigas de cimentación;zapatas-con-vigas;Planta de cimentación del sótano 2 y despieces de zapatas.;;"Zapatas puntuales y alargadas en el sótano 2. Ejemplos: T.1 de 5,55 × 1,50 × 0,40 m, T.3 de 4,10 × 1,50 × 0,40 m y T.5 de 2,50 × 2,50 × 0,60 m. Vigas VC-D de 50 × 60 cm y VC-E de 70 × 100 cm.
 
 El edificio tiene dos sótanos. El punto representa los predios de la torre, junto al centro comercial.";https://www.openstreetmap.org/?mlat=6.553995&mlon=-73.152250#map=19/6.553995/-73.152250;;−5,60 m (planta del sótano 2)
-E09;La Florida Campestre;Calle 12 Sur n.º 12-25, predio El Castillo;6.532292;-73.126077;6;;;;Plantas de cimentación 1 y 2, lámina E 1/16.;;"Los planos disponibles son de la tercera etapa. Muestran bases rectangulares unidas por vigas, varias de 30 × 40 cm. El tipo de cimentación de la segunda etapa no está determinado con esos planos.
-
-El punto representa el predio del conjunto.";https://www.openstreetmap.org/?mlat=6.532292&mlon=-73.126077#map=19/6.532292/-73.126077;;
+E09;La Florida Campestre;Calle 12 Sur n.º 12-25, predio El Castillo;6.532292;-73.126077;6;;Zapatas con vigas de cimentación;zapatas-con-vigas;Plantas de cimentación 1 y 2, lámina E 1/16.;;Zapatas rectangulares conectadas por vigas de cimentación. Varias vigas tienen una sección de 30 × 40 cm.;https://www.openstreetmap.org/?mlat=6.532292&mlon=-73.126077#map=19/6.532292/-73.126077;;
