@@ -1,5 +1,5 @@
 import { leerInventario, META, normalizar } from "./datos.js?v=2";
-import { iniciarCatastro } from "./catastro.js";
+import { iniciarCatastro } from "./catastro.js?v=2";
 
 const centro = [6.55, -73.133333];
 const porId = (id) => document.getElementById(id);

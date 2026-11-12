@@ -112,6 +112,10 @@ export function iniciarCatastro(L, mapa) {
   const estado = document.getElementById("estado-catastro");
   if (!controles || !estado) return;
 
+  mapa.attributionControl.addAttribution(
+    '<a href="https://www.arcgis.com/home/item.html?id=a55304e6ce4a47fb97f988ac321f1440" target="_blank" rel="noopener">Catastro IGAC</a>',
+  );
+
   const nombrePanel = "catastro-igac";
   const panel = mapa.createPane(nombrePanel);
   panel.style.zIndex = 410;
