@@ -161,4 +161,14 @@ nav a:hover { text-decoration: underline; }
   .inventory { border-left: 0; border-top: 1px solid var(--line); }
   .sources { padding-block: 29px; }
 }
+@media (max-width: 380px) {
+  .top-inner { gap: 8px; }
+  .brand { gap: 7px; }
+  .brand-mark { width: 31px; height: 34px; }
+  .brand small { font-size: .69rem; }
+  .top-link { gap: 5px; padding: 6px 8px; font-size: .76rem; }
+  .metrics div { padding-inline: 5px; }
+  .metrics dt { font-size: .76rem; overflow-wrap: anywhere; }
+  .map-layers label { min-height: 32px; padding: 3px 6px; font-size: .79rem; }
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
