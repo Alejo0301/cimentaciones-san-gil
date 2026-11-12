@@ -1,4 +1,5 @@
-import { leerInventario, META, normalizar } from "./datos.js";
+import { leerInventario, META, normalizar } from "./datos.js?v=2";
+import { iniciarCatastro } from "./catastro.js";
 
 const centro = [6.55, -73.133333];
 const porId = (id) => document.getElementById(id);
@@ -11,6 +12,11 @@ const encuadrar = porId("encuadrar");
 const avisoMapa = porId("estado-mapa");
 const mapaAlterno = porId("mapa-alterno");
 const formatoNumero = new Intl.NumberFormat("es-CO", { maximumFractionDigits: 2 });
+const textoEstado = {
+  verificada: "Cimentación verificada",
+  reportada: "Cimentación reportada",
+  pendiente: "Cimentación por verificar",
+};
 const L = window.L;
 let mapa;
 let capaMarcadores;
@@ -55,6 +61,8 @@ function iniciarMapa() {
   base.addTo(mapa);
   capaMarcadores = L.layerGroup().addTo(mapa);
   L.control.scale({ imperial: false, position: "bottomright" }).addTo(mapa);
+  porId("capas-catastro").disabled = false;
+  iniciarCatastro(L, mapa);
   encuadrar.disabled = false;
   encuadrar.addEventListener("click", ajustarMapa);
 }
@@ -75,9 +83,9 @@ function dibujarMarcadores() {
   marcadores.clear();
   for (const edificio of visibles) {
     if (!edificio.coordenadas) continue;
-    const { id, nombre, coordenadas, verificada } = edificio;
+    const { id, nombre, coordenadas, estadoCimentacion } = edificio;
     const icono = L.divIcon({
-      className: `map-pin${verificada ? "" : " pending"}`,
+      className: `map-pin ${estadoCimentacion}`,
       html: crear("span", id.slice(1)),
       iconSize: [31, 31],
       iconAnchor: [15, 15],
@@ -101,10 +109,10 @@ function actualizarSeleccion() {
 }
 
 function mostrarFicha(edificio, acercar, moverFoco = true) {
-  const { id, nombre, direccion, coordenadas, verificada, tipo, pisos, altura, fuente, enlace, observaciones, enlaceUbicacion } = edificio;
+  const { id, nombre, direccion, coordenadas, estadoCimentacion, tipo, pisos, altura, fuente, enlace, observaciones, enlaceUbicacion } = edificio;
   seleccionado = id;
   const estado = crear("p", "", "chip");
-  estado.append(crear("i", "", `dot ${verificada ? "verified" : "pending"}`), verificada ? "Cimentación verificada" : "Cimentación por verificar");
+  estado.append(crear("i", "", `dot ${estadoCimentacion}`), textoEstado[estadoCimentacion]);
   const datos = crear("dl");
   const campos = [
     ["Dirección", direccion],
@@ -112,7 +120,7 @@ function mostrarFicha(edificio, acercar, moverFoco = true) {
     ["Pisos", pisos],
     ["Altura", altura ? `${formatoNumero.format(altura)} m` : ""],
     ["Tipo de cimentación", tipo],
-    ["Referencia documental", fuente],
+    ["Fuentes de la ficha", fuente],
     ["Observaciones", observaciones],
   ];
   for (const [etiqueta, valor] of campos) {
@@ -146,10 +154,9 @@ function mostrarMensaje(titulo, descripcion) {
 
 function actualizarListado() {
   const consulta = normalizar(buscar.value);
-  visibles = edificios.filter(({ id, nombre, direccion, tipo, observaciones, verificada }) => {
-    const estado = verificada ? "verificada" : "pendiente";
+  visibles = edificios.filter(({ id, nombre, direccion, tipo, observaciones, estadoCimentacion }) => {
     const coincide = normalizar(`${id} ${nombre} ${direccion} ${tipo} ${observaciones}`).includes(consulta);
-    return coincide && (filtro.value === "todas" || filtro.value === estado);
+    return coincide && (filtro.value === "todas" || filtro.value === estadoCimentacion);
   });
   if (!visibles.some(({ id }) => id === seleccionado)) {
     seleccionado = null;
@@ -161,13 +168,13 @@ function actualizarListado() {
   listado.replaceChildren();
 
   for (const edificio of visibles) {
-    const { id, nombre, tipo, verificada } = edificio;
+    const { id, nombre, tipo, estadoCimentacion } = edificio;
     const boton = crear("button", "", "building");
     boton.type = "button";
     boton.dataset.id = id;
     const texto = crear("span");
-    texto.append(crear("span", nombre, "building-name"), crear("span", tipo || "Cimentación por verificar", "building-type"));
-    boton.append(crear("span", id, `badge${verificada ? "" : " pending"}`), texto);
+    texto.append(crear("span", nombre, "building-name"), crear("span", tipo || textoEstado[estadoCimentacion], "building-type"));
+    boton.append(crear("span", id, `badge ${estadoCimentacion}`), texto);
     boton.addEventListener("click", () => mostrarFicha(edificio, true));
     listado.append(boton);
   }
@@ -193,7 +200,7 @@ try {
   if (ubicadas === META && verificadas === META) {
     const etapa = porId("etapa");
     etapa.classList.add("complete");
-    etapa.replaceChildren(crear("i", "", "dot verified"), "Levantamiento completo");
+    etapa.replaceChildren(crear("i", "", "dot verificada"), "Levantamiento completo");
   }
   porId("controles").hidden = !edificios.length;
   buscar.addEventListener("input", actualizarListado);

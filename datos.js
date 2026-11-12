@@ -2,6 +2,12 @@ const columnas = [
   "id", "nombre", "direccion", "latitud", "longitud", "pisos", "altura_m",
   "tipo_cimentacion", "estado_cimentacion", "fuente", "enlace_fuente", "observaciones", "enlace_ubicacion",
 ];
+const estadosConTipo = new Map([
+  ["verificada", "verificada"],
+  ["verificado", "verificada"],
+  ["reportada", "reportada"],
+  ["reportado", "reportada"],
+]);
 
 export const META = 11;
 
@@ -77,13 +83,16 @@ export function leerInventario(csv) {
       : null;
     const nivel = decimal(pisos);
     const metros = decimal(altura);
-    const verificada = ["verificada", "verificado"].includes(normalizar(estado)) && Boolean(tipo && fuente);
+    const estadoCimentacion = tipo && fuente
+      ? estadosConTipo.get(normalizar(estado)) ?? "pendiente"
+      : "pendiente";
 
     return [{
-      id, nombre, direccion, coordenadas, fuente, observaciones, verificada,
+      id, nombre, direccion, coordenadas, fuente, observaciones, estadoCimentacion,
+      verificada: estadoCimentacion === "verificada",
       pisos: Number.isInteger(nivel) && nivel > 0 ? nivel : null,
       altura: metros > 0 ? metros : null,
-      tipo: verificada ? tipo : "",
+      tipo: estadoCimentacion === "pendiente" ? "" : tipo,
       enlace: enlaceSeguro(enlace),
       enlaceUbicacion: enlaceSeguro(enlaceUbicacion),
     }];

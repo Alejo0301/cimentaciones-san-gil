@@ -1,16 +1,22 @@
 # Cimentaciones de San Gil
 
-Visor del levantamiento de 11 edificaciones de mayor altura en San Gil, Santander. La página estática muestra el avance, la ubicación y las fichas de revisión documental. La base del mapa es OpenStreetMap y el botón **Geoportal IGAC** abre el módulo catastral de Colombia en Mapas.
+Visor del levantamiento de 11 edificaciones de mayor altura en San Gil, Santander. La página muestra el avance, la ubicación y las fichas de revisión documental. Las capas de construcciones, predios y nomenclatura vial consultan la Base Catastral Pública del IGAC para la vista del mapa. La base visual es OpenStreetMap y el botón **Geoportal IGAC** abre el módulo catastral de Colombia en Mapas.
 
 ## Actualizar el inventario
 
 Edita `data/edificaciones.csv`. El archivo usa UTF-8 y punto y coma. Conserva la primera fila y los identificadores `E01` a `E11`. Una fila con nombre aparece en el listado y aparece en el mapa al agregar latitud y longitud confirmadas en grados decimales WGS 84. Puedes usar punto o coma decimal. Si un campo contiene punto y coma, ponlo entre comillas dobles.
 
-Registra pisos y altura en sus columnas respectivas cuando estén documentados. Para mostrar el tipo de cimentación, completa `tipo_cimentacion`, indica `Verificado` en `estado_cimentacion` e incluye una referencia publicable en `fuente`. Usa `Por verificar` cuando falte respaldo o haya discrepancias. En `observaciones` puedes precisar si el dato describe el diseño o la obra ejecutada y señalar qué torre o zona cubre el documento.
+Registra pisos y altura en sus columnas respectivas cuando estén documentados. El visor muestra el tipo de cimentación cuando están completos `tipo_cimentacion` y `fuente` y el estado es `Verificado` o `Reportada`.
+
+- Usa `Verificado` cuando el documento revisado identifique la cimentación de esa edificación. Escribe una referencia publicable en `fuente`.
+- Usa `Reportada` para información técnica aportada al inventario que esté pendiente de revisión documental. Indica el origen de la información en `fuente`.
+- Usa `Por verificar` cuando falte información sobre la cimentación o haya discrepancias por resolver.
+
+En `observaciones` puedes registrar las dimensiones aportadas, precisar si el dato describe el diseño o la obra ejecutada y señalar qué torre o zona cubre el documento.
 
 GitHub Pages publica el CSV junto con el sitio. Mantén los expedientes, firmas y datos personales en el archivo interno de la Secretaría. Usa enlaces HTTPS públicos en `enlace_fuente` y, cuando haya una ficha cartográfica de la edificación, en `enlace_ubicacion`.
 
-El punto de E01 corresponde al centroide de la huella de la edificación y los pisos provienen de la capa de construcciones urbanas. Estos datos derivados de la **Base Catastral Pública del IGAC**, corte del 31 de agosto de 2026, se comparten bajo CC BY-SA 4.0. [Ficha de la base catastral](https://www.arcgis.com/sharing/rest/content/items/a55304e6ce4a47fb97f988ac321f1440?f=pjson) · [Licencia](https://creativecommons.org/licenses/by-sa/4.0/deed.es)
+El punto de E01 corresponde al centroide de la huella de la edificación y los pisos provienen de la capa de construcciones urbanas. El punto de E02 corresponde al centroide del predio identificado por la nomenclatura catastral. Sus pisos corresponden a la licencia de construcción. Las capas y los datos derivados de la **Base Catastral Pública del IGAC**, corte del 31 de agosto de 2026, se comparten bajo CC BY-SA 4.0. [Ficha de la base catastral](https://www.arcgis.com/sharing/rest/content/items/a55304e6ce4a47fb97f988ac321f1440?f=pjson) · [Licencia](https://creativecommons.org/licenses/by-sa/4.0/deed.es)
 
 ## Abrir en el computador
 

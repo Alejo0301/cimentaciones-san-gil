@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Instrument+Sans:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
-  <link rel="stylesheet" href="./estilos.css">
+  <link rel="stylesheet" href="./estilos.css?v=2">
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
-  <script type="module" src="./visor.js"></script>
+  <script type="module" src="./visor.js?v=2"></script>
 </head>
 <body>
   <a class="skip" href="#mapa-inventario">Ir al visor</a>
@@ -52,22 +52,32 @@
               <p class="eyebrow map-kicker">Santander, Colombia</p>
               <h2 id="titulo-mapa">Mapa de San Gil</h2>
             </div>
-            <button id="encuadrar" class="outline" type="button" disabled><span aria-hidden="true">⌖</span> Vista general</button>
+            <button id="encuadrar" class="outline" type="button" disabled><span aria-hidden="true">⌖</span> Ver edificios</button>
           </header>
+          <div class="map-toolbar">
+            <fieldset id="capas-catastro" class="map-layers" aria-describedby="estado-catastro" disabled>
+              <legend>Capas del IGAC</legend>
+              <label><input type="checkbox" data-capa="construcciones" checked><i class="layer-key layer-buildings" aria-hidden="true"></i> Construcciones</label>
+              <label><input type="checkbox" data-capa="predios"><i class="layer-key layer-parcels" aria-hidden="true"></i> Predios</label>
+              <label><input type="checkbox" data-capa="vias"><i class="layer-key layer-roads" aria-hidden="true"></i> Nomenclatura vial</label>
+            </fieldset>
+            <p id="estado-catastro" class="layer-status" role="status">Consulta las capas catastrales al acercar el mapa.</p>
+          </div>
           <div class="map-frame">
             <div id="mapa" aria-label="Mapa interactivo de San Gil"></div>
             <p id="estado-mapa" class="map-notice" role="status" hidden></p>
             <a id="mapa-alterno" class="map-alternate" href="https://www.openstreetmap.org/#map=15/6.5500/-73.1333" target="_blank" rel="noopener" hidden>Abrir mapa de San Gil ↗</a>
           </div>
           <div class="legend" aria-label="Convenciones del mapa">
-            <span><i class="dot verified"></i> Cimentación verificada</span>
-            <span><i class="dot pending"></i> Cimentación por verificar</span>
+            <span><i class="dot verificada"></i> Cimentación verificada</span>
+            <span><i class="dot reportada"></i> Cimentación reportada</span>
+            <span><i class="dot pendiente"></i> Sin tipo registrado</span>
           </div>
         </div>
 
         <aside class="inventory" aria-labelledby="titulo-inventario">
           <div class="inventory-head">
-            <p id="etapa" class="stage"><i class="dot pending"></i> Levantamiento en curso</p>
+            <p id="etapa" class="stage"><i class="dot pendiente"></i> Levantamiento en curso</p>
             <h2 id="titulo-inventario">Edificaciones</h2>
             <p id="conteo-fichas" class="muted" aria-live="polite">Cargando el inventario…</p>
           </div>
@@ -78,7 +88,8 @@
             <select id="filtro">
               <option value="todas">Todos los estados</option>
               <option value="verificada">Verificada</option>
-              <option value="pendiente">Por verificar</option>
+              <option value="reportada">Reportada</option>
+              <option value="pendiente">Sin tipo registrado</option>
             </select>
           </div>
           <div id="listado" class="listing"></div>
@@ -95,7 +106,7 @@
       <div>
         <p class="eyebrow">Consulta y verificación</p>
         <h2 id="titulo-fuentes">Fuentes del visor</h2>
-        <p>El catastro sirve para contrastar la ubicación. Cada ficha indica el documento que respalda el tipo de cimentación cuando se verifica.</p>
+        <p>Las capas del mapa provienen de la Base Catastral Pública del IGAC. Las fichas del inventario identifican el origen de los datos de cimentación.</p>
       </div>
       <div class="source-links">
         <a href="https://www.colombiaenmapas.gov.co/?b=igac&amp;u=0&amp;module=catastral" target="_blank" rel="noopener"><span><strong>Colombia en Mapas</strong><small>Consulta catastral del IGAC</small></span><span aria-hidden="true">↗</span></a>

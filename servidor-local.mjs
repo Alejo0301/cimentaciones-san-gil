@@ -6,6 +6,7 @@ const rutas = new Map([
   ["/index.html", ["index.html", "text/html"]],
   ["/estilos.css", ["estilos.css", "text/css"]],
   ["/datos.js", ["datos.js", "text/javascript"]],
+  ["/catastro.js", ["catastro.js", "text/javascript"]],
   ["/visor.js", ["visor.js", "text/javascript"]],
   ["/data/edificaciones.csv", ["data/edificaciones.csv", "text/csv"]],
 ]);
