@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Visor del levantamiento de cimentaciones de 11 edificaciones de San Gil, Santander.">
+  <meta name="theme-color" content="#152c2a">
+  <title>Cimentaciones de San Gil · Visor técnico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Instrument+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
+  <link rel="stylesheet" href="./estilos.css">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+  <script type="module" src="./visor.js"></script>
+</head>
+<body>
+  <a class="skip" href="#mapa-inventario">Ir al visor</a>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="brand" href="./" aria-label="Inicio del visor de San Gil">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><strong>San Gil</strong><small>Santander, Colombia</small></span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="#mapa-inventario">Visor</a>
+        <a href="#fuentes">Fuentes</a>
+        <a class="top-link" href="https://www.colombiaenmapas.gov.co/?b=igac&amp;u=0&amp;module=catastral" target="_blank" rel="noopener">Geoportal IGAC <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro wrap" aria-labelledby="titulo">
+      <div class="intro-text">
+        <p class="eyebrow">Inventario técnico municipal</p>
+        <h1 id="titulo">Cimentaciones<br class="title-break"> de San Gil<span>.</span></h1>
+        <p class="intro-description">Ubicación y revisión documental de la cimentación de 11 edificaciones de mayor altura en el municipio.</p>
+      </div>
+      <dl class="metrics" aria-label="Avance del levantamiento">
+        <div><dt>Meta del inventario</dt><dd>11</dd></div>
+        <div><dt>Ubicadas en mapa</dt><dd id="total-ubicadas">—</dd></div>
+        <div><dt>Cimentaciones verificadas</dt><dd id="total-verificadas">—</dd></div>
+      </dl>
+    </section>
+
+    <section class="explorer wrap" id="mapa-inventario" aria-labelledby="titulo-mapa">
+      <div class="viewer">
+        <div class="map-column">
+          <header class="map-header">
+            <div>
+              <p class="eyebrow map-kicker">Santander, Colombia</p>
+              <h2 id="titulo-mapa">Mapa de San Gil</h2>
+            </div>
+            <button id="encuadrar" class="outline" type="button" disabled><span aria-hidden="true">⌖</span> Vista general</button>
+          </header>
+          <div class="map-frame">
+            <div id="mapa" aria-label="Mapa interactivo de San Gil"></div>
+            <p id="estado-mapa" class="map-notice" role="status" hidden></p>
+            <a id="mapa-alterno" class="map-alternate" href="https://www.openstreetmap.org/#map=15/6.5500/-73.1333" target="_blank" rel="noopener" hidden>Abrir mapa de San Gil ↗</a>
+          </div>
+          <div class="legend" aria-label="Convenciones del mapa">
+            <span><i class="dot verified"></i> Cimentación verificada</span>
+            <span><i class="dot pending"></i> Cimentación por verificar</span>
+          </div>
+        </div>
+
+        <aside class="inventory" aria-labelledby="titulo-inventario">
+          <div class="inventory-head">
+            <p id="etapa" class="stage"><i class="dot pending"></i> Levantamiento en curso</p>
+            <h2 id="titulo-inventario">Edificaciones</h2>
+            <p id="conteo-fichas" class="muted" aria-live="polite">Cargando el inventario…</p>
+          </div>
+          <div id="controles" class="controls" hidden>
+            <label for="buscar">Buscar por nombre, dirección o cimentación</label>
+            <input id="buscar" type="search" placeholder="Buscar una edificación">
+            <label for="filtro">Estado de la cimentación</label>
+            <select id="filtro">
+              <option value="todas">Todos los estados</option>
+              <option value="verificada">Verificada</option>
+              <option value="pendiente">Por verificar</option>
+            </select>
+          </div>
+          <div id="listado" class="listing"></div>
+          <section id="ficha" class="detail" tabindex="-1" aria-label="Ficha de la edificación" hidden></section>
+          <div class="inventory-foot">
+            <a class="text-link" href="https://www.colombiaenmapas.gov.co/?b=igac&amp;u=0&amp;module=catastral" target="_blank" rel="noopener">Consultar catastro en Colombia en Mapas <span aria-hidden="true">↗</span></a>
+          </div>
+        </aside>
+      </div>
+      <noscript><p>Activa JavaScript para consultar el mapa interactivo y las fichas.</p></noscript>
+    </section>
+
+    <section id="fuentes" class="sources wrap" aria-labelledby="titulo-fuentes">
+      <div>
+        <p class="eyebrow">Consulta y verificación</p>
+        <h2 id="titulo-fuentes">Fuentes del visor</h2>
+        <p>El catastro sirve para contrastar la ubicación. Cada ficha indica el documento que respalda el tipo de cimentación cuando se verifica.</p>
+      </div>
+      <div class="source-links">
+        <a href="https://www.colombiaenmapas.gov.co/?b=igac&amp;u=0&amp;module=catastral" target="_blank" rel="noopener"><span><strong>Colombia en Mapas</strong><small>Consulta catastral del IGAC</small></span><span aria-hidden="true">↗</span></a>
+        <a href="https://www.arcgis.com/sharing/rest/content/items/a55304e6ce4a47fb97f988ac321f1440?f=pjson" target="_blank" rel="noopener"><span><strong>Base Catastral Pública del IGAC</strong><small>Corte del 31 de agosto de 2026 · CC BY-SA 4.0</small></span><span aria-hidden="true">↗</span></a>
+        <a href="https://www.sangil.gov.co/documentos/1514/documentacion-adopcion-plan-basico-de-ordenamiento-territorial-pbot/" target="_blank" rel="noopener"><span><strong>PBOT de San Gil</strong><small>Acuerdo 007 de 2023 y anexos</small></span><span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>Inventario de cimentaciones · San Gil, Santander</span>
+      <a href="https://www.openstreetmap.org/fixthemap" target="_blank" rel="noopener">Reportar un error en el mapa ↗</a>
+    </div>
+  </footer>
+</body>
+</html>
