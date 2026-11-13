@@ -7,9 +7,9 @@
   <meta name="theme-color" content="#ffffff">
   <title>Edificaciones destacadas de San Gil y su cimentación</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
-  <link rel="stylesheet" href="./estilos.css?v=6">
+  <link rel="stylesheet" href="./estilos.css?v=7">
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
-  <script type="module" src="./visor.js?v=5"></script>
+  <script type="module" src="./visor.js?v=6"></script>
 </head>
 <body>
   <a class="skip" href="#mapa-inventario">Ir al visor</a>
@@ -36,7 +36,7 @@
         <p class="intro-description">Explora dónde están las edificaciones del inventario, qué sistemas de cimentación utilizan y qué niveles indican sus planos.</p>
         <div class="intro-actions">
           <a class="primary-link" href="#mapa-inventario">Explorar el mapa <span aria-hidden="true">↓</span></a>
-          <a class="download-link" href="./informe-cimentaciones-san-gil.docx?v=3" download>Descargar informe en Word <span aria-hidden="true">↓</span></a>
+          <a class="download-link" href="./informe-cimentaciones-san-gil.docx?v=4" download>Descargar informe en Word <span aria-hidden="true">↓</span></a>
         </div>
       </div>
     </section>
@@ -110,7 +110,12 @@
         <div class="stats-panel">
           <h3>Niveles de cimentación en planos</h3>
           <dl id="resumen-cotas" class="level-stats"></dl>
-          <p id="nota-desplante" class="stats-note">Cada cota usa la referencia de su propio proyecto.</p>
+          <p class="stats-note">Cada cota usa la referencia de su propio plano.</p>
+        </div>
+        <div class="stats-panel">
+          <h3>Profundidades de desplante recomendadas</h3>
+          <dl id="resumen-desplantes" class="level-stats"></dl>
+          <p class="stats-note">Son recomendaciones de los estudios de suelos. Se muestran por separado porque usan distintas referencias de terreno.</p>
         </div>
       </div>
     </section>
