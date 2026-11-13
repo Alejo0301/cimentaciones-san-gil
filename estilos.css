@@ -125,7 +125,7 @@ nav a:hover { text-decoration: underline; }
 
 .statistics { padding-block: 37px 9px; scroll-margin-top: 14px; }
 .statistics h2, .sources h2 { font-size: clamp(1.7rem, 3vw, 2.6rem); letter-spacing: -.035em; line-height: 1.1; margin-block: 4px 8px; }
-.statistics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; margin-top: 16px; }
+.statistics-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; margin-top: 16px; }
 .stats-panel { padding: clamp(15px, 2.5vw, 24px); border: 1px solid var(--line); border-radius: 12px; background: var(--white); }
 .stats-panel h3 { font-size: 1.13rem; margin-bottom: 13px; line-height: 1.25; }
 .type-stats { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }

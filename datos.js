@@ -1,7 +1,7 @@
 const columnas = [
   "id", "nombre", "direccion", "latitud", "longitud", "pisos", "altura_m",
   "tipo_cimentacion", "grupos_cimentacion", "fuente", "enlace_fuente", "observaciones", "enlace_ubicacion",
-  "profundidad_desplante_m", "cota_proyecto",
+  "desplante_recomendado", "cota_proyecto",
 ];
 
 export const TIPOS = Object.freeze({
@@ -68,7 +68,7 @@ export function leerInventario(csv) {
   const ids = new Set();
 
   return filas.flatMap((fila) => {
-    const [id, nombre, direccion, latitud, longitud, pisos, altura, tipo, grupos, fuente, enlace, observaciones, enlaceUbicacion, profundidad, cotaProyecto] = fila;
+    const [id, nombre, direccion, latitud, longitud, pisos, altura, tipo, grupos, fuente, enlace, observaciones, enlaceUbicacion, desplanteRecomendado, cotaProyecto] = fila;
     if (fila.length !== columnas.length || !/^E(?:0[1-9]|[1-9][0-9])$/.test(id) || ids.has(id)) {
       throw new Error(`Fila inválida o repetida en el inventario (${id || "sin identificador"}).`);
     }
@@ -86,23 +86,12 @@ export function leerInventario(csv) {
     if (categorias.some((categoria) => !Object.hasOwn(TIPOS, categoria))) {
       throw new Error(`Tipo de cimentación desconocido en ${id}.`);
     }
-    const desplante = decimal(profundidad);
-
     return [{
-      id, nombre, direccion, coordenadas, fuente, observaciones, tipo, categorias, cotaProyecto,
+      id, nombre, direccion, coordenadas, fuente, observaciones, tipo, categorias, desplanteRecomendado, cotaProyecto,
       pisos: Number.isInteger(nivel) && nivel > 0 ? nivel : null,
       altura: metros > 0 ? metros : null,
-      profundidadDesplante: desplante > 0 ? desplante : null,
       enlace: enlaceSeguro(enlace),
       enlaceUbicacion: enlaceSeguro(enlaceUbicacion),
     }];
   });
-}
-
-export function resumenDesplante(edificios) {
-  const medidas = edificios.flatMap(({ profundidadDesplante }) => profundidadDesplante === null ? [] : [profundidadDesplante]);
-  return {
-    cantidad: medidas.length,
-    promedio: medidas.length >= 2 ? medidas.reduce((total, medida) => total + medida, 0) / medidas.length : null,
-  };
 }

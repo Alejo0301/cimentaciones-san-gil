@@ -8,7 +8,7 @@ Edita `data/edificaciones.csv`. El archivo usa UTF-8 y punto y coma. Conserva la
 
 Registra pisos y altura en sus columnas respectivas cuando estén documentados. Describe el sistema en `tipo_cimentacion` y escribe su referencia en `fuente`. En `grupos_cimentacion` usa `zapatas`, `zapatas-con-vigas` o `losa`. Si hay varios sistemas, sepáralos con `|` y escribe primero el principal. Si falta el tipo o no se puede atribuir a esa edificación, deja los grupos vacíos y aclara el alcance en `observaciones`. La ficha seguirá apareciendo al ver todos los edificios.
 
-Usa `profundidad_desplante_m` solo para una medida representativa por ficha, en metros desde el terreno hasta la base de la cimentación, con una referencia de terreno comparable y su fuente identificada. El visor calcula el promedio cuando hay al menos dos medidas. Guarda los niveles relativos en `cota_proyecto` con su referencia y los espesores de elementos en `observaciones`.
+Usa `desplante_recomendado` para la profundidad indicada por el estudio de suelos. Incluye la referencia de medición y conserva el rango o las referencias alternativas cuando las dé el estudio. El visor presenta estas recomendaciones por separado. Guarda los niveles relativos en `cota_proyecto` con su referencia y los espesores de elementos en `observaciones`.
 
 En `observaciones` puedes registrar las dimensiones aportadas, precisar si el dato describe el diseño o la obra ejecutada y señalar qué torre o zona cubre el documento.
 
@@ -24,4 +24,4 @@ Con Node.js instalado, abre una terminal en esta carpeta y ejecuta `node servido
 
 ## Publicar en GitHub Pages
 
-Sube el contenido de esta carpeta, incluido `.nojekyll`, a la raíz de la rama `main` de tu repositorio. En **Settings → Pages**, selecciona **Deploy from a branch**, elige `main` y `/(root)` y guarda. La sección **Pages** muestra el enlace una vez termine el despliegue. [Documentación de GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+El sitio se publica desde la raíz de `main`. Abre un pull request desde una rama de trabajo para actualizar la rama protegida. Una vez fusionado, revisa el despliegue en **Actions** y comprueba el [visor público](https://alejo0301.github.io/cimentaciones-san-gil/). Conserva `.nojekyll` en la raíz.

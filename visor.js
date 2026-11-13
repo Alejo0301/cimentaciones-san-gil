@@ -1,4 +1,4 @@
-import { leerInventario, normalizar, resumenDesplante, TIPOS } from "./datos.js?v=4";
+import { leerInventario, normalizar, TIPOS } from "./datos.js?v=5";
 import { iniciarCatastro } from "./catastro.js?v=2";
 
 const centro = [6.55, -73.133333];
@@ -43,12 +43,22 @@ function colorDeFicha({ categorias }) {
   return filtro.value === "todas" ? categorias[0] ?? "" : filtro.value;
 }
 
+function mostrarNiveles(id, campo) {
+  const filas = edificios.filter((edificio) => edificio[campo]).map((edificio) => {
+    const fila = crear("div");
+    fila.append(crear("dt", edificio.nombre), crear("dd", edificio[campo]));
+    return fila;
+  });
+  porId(id).replaceChildren(...filas);
+  return filas.length;
+}
+
 function mostrarResumen() {
   const total = edificios.length;
   const conTipo = edificios.filter(({ categorias }) => categorias.length).length;
-  const conCota = edificios.filter(({ cotaProyecto }) => cotaProyecto);
-  const { cantidad, promedio } = resumenDesplante(edificios);
-  porId("resumen-inventario").textContent = `${total} fichas en el inventario · ${conTipo} con tipo de cimentación identificado · ${conCota.length} con cotas en planos`;
+  const conCota = mostrarNiveles("resumen-cotas", "cotaProyecto");
+  const conDesplante = mostrarNiveles("resumen-desplantes", "desplanteRecomendado");
+  porId("resumen-inventario").textContent = `${total} fichas en el inventario · ${conTipo} con tipo de cimentación identificado · ${conCota} con cotas en planos · ${conDesplante} con recomendación de desplante`;
 
   const filas = Object.entries(TIPOS).map(([tipo, etiqueta]) => {
     const n = edificios.filter(({ categorias }) => categorias.includes(tipo)).length;
@@ -64,14 +74,6 @@ function mostrarResumen() {
     return fila;
   });
   porId("resumen-tipos").replaceChildren(...filas);
-  porId("resumen-cotas").replaceChildren(...conCota.map(({ nombre, cotaProyecto }) => {
-    const fila = crear("div");
-    fila.append(crear("dt", nombre), crear("dd", cotaProyecto));
-    return fila;
-  }));
-  porId("nota-desplante").textContent = promedio === null
-    ? "Las cotas tienen referencias distintas. El inventario no reúne suficientes profundidades de desplante medidas desde el terreno para calcular un promedio."
-    : `Profundidad media de desplante: ${formatoNumero.format(promedio)} m, con ${cantidad} medidas desde el terreno hasta la base de la cimentación. Las cotas de plano se muestran aparte.`;
 }
 
 function estadoDeMapa(mensaje) {
@@ -151,7 +153,7 @@ function actualizarSeleccion() {
 }
 
 function mostrarFicha(edificio, acercar, moverFoco = true) {
-  const { id, nombre, direccion, coordenadas, categorias, tipo, pisos, altura, fuente, enlace, observaciones, enlaceUbicacion, profundidadDesplante, cotaProyecto } = edificio;
+  const { id, nombre, direccion, coordenadas, categorias, tipo, pisos, altura, fuente, enlace, observaciones, enlaceUbicacion, desplanteRecomendado, cotaProyecto } = edificio;
   seleccionado = id;
   const tipos = categorias.map((categoria) => {
     const chip = crear("span", "", "chip");
@@ -167,7 +169,7 @@ function mostrarFicha(edificio, acercar, moverFoco = true) {
     ["Pisos", pisos],
     ["Altura", altura ? `${formatoNumero.format(altura)} m` : ""],
     ["Tipo de cimentación", tipo],
-    ["Profundidad de desplante", profundidadDesplante === null ? "" : `${formatoNumero.format(profundidadDesplante)} m desde el terreno`],
+    ["Desplante recomendado", desplanteRecomendado],
     ["Cota de proyecto", cotaProyecto],
     ["Fuentes de la ficha", fuente],
     ["Observaciones", observaciones],
@@ -241,7 +243,7 @@ function actualizarListado() {
 iniciarMapa();
 iniciarTipos();
 try {
-  const respuesta = await fetch(new URL("./data/edificaciones.csv?v=2", import.meta.url), { cache: "no-cache" });
+  const respuesta = await fetch(new URL("./data/edificaciones.csv?v=3", import.meta.url), { cache: "no-cache" });
   if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
   edificios = leerInventario(await respuesta.text());
   mostrarResumen();
