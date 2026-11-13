@@ -243,7 +243,7 @@ function actualizarListado() {
 iniciarMapa();
 iniciarTipos();
 try {
-  const respuesta = await fetch(new URL("./data/edificaciones.csv?v=5", import.meta.url), { cache: "no-cache" });
+  const respuesta = await fetch(new URL("./data/edificaciones.csv?v=6", import.meta.url), { cache: "no-cache" });
   if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
   edificios = leerInventario(await respuesta.text());
   mostrarResumen();
