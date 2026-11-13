@@ -16,7 +16,7 @@ Al actualizar el informe, conserva el nombre `informe-cimentaciones-san-gil.docx
 
 GitHub Pages publica el CSV junto con el sitio. Mantén los expedientes, firmas y datos personales en el archivo interno de la Secretaría. Usa enlaces HTTPS públicos en `enlace_fuente` y, cuando haya una ficha cartográfica de la edificación, en `enlace_ubicacion`.
 
-El punto de E01 corresponde al centroide de la huella de la edificación y los pisos provienen de la capa de construcciones urbanas. El punto de E02 corresponde al centroide del predio identificado por la nomenclatura catastral. Sus pisos corresponden a la licencia de construcción. Las capas y los datos derivados de la **Base Catastral Pública del IGAC**, corte del 31 de agosto de 2026, se comparten bajo CC BY-SA 4.0. [Ficha de la base catastral](https://www.arcgis.com/sharing/rest/content/items/a55304e6ce4a47fb97f988ac321f1440?f=pjson) · [Licencia](https://creativecommons.org/licenses/by-sa/4.0/deed.es)
+El punto de E01 corresponde al centroide de la huella de la edificación y los pisos provienen de la capa de construcciones urbanas. Los puntos de E02 y E10 corresponden al centroide del predio catastral. Sus pisos provienen de la licencia de construcción. Las capas y los datos derivados de la **Base Catastral Pública del IGAC**, corte del 31 de agosto de 2026, se comparten bajo CC BY-SA 4.0. [Ficha de la base catastral](https://www.arcgis.com/sharing/rest/content/items/a55304e6ce4a47fb97f988ac321f1440?f=pjson) · [Licencia](https://creativecommons.org/licenses/by-sa/4.0/deed.es)
 
 ## Abrir en el computador
 
